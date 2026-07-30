@@ -44,12 +44,11 @@ class OrderAnalyzer:
                 raise ValueError(f"Отсутствуют обязательные колонки: {missing}")
 
             # Проверка, что total_amount числовой (если нет – ошибка)
-            # Попытка преобразовать в число, нечисловые станут NaN
             numeric_amount = pd.to_numeric(df[AMOUNT_COLUMN], errors='coerce')
             if numeric_amount.isna().any():
                 raise ValueError(f"Колонка {AMOUNT_COLUMN} содержит нечисловые значения")
 
-            # Присваиваем обработанную колонку (на всякий случай)
+            # Присваиваем обработанную колонку
             df[AMOUNT_COLUMN] = numeric_amount
             return df
 
@@ -119,3 +118,4 @@ class OrderAnalyzer:
         df_report = pd.DataFrame(self.results)
         df_report = df_report[['filename', 'total_revenue', 'average_check', 'order_count']]
         report_path = os.path.join(self.reports_dir, report_filename)
+        df_report.to_csv(report_path, index=False, encoding='utf-8')
